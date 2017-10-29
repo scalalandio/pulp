@@ -3,23 +3,38 @@ package io.scalaland.pulp
 import scala.reflect.macros.whitebox.Context
 import scala.language.experimental.macros
 
-private[pulp] class WiredImpl(val c: Context)(annottees: Any*) {
+private[pulp] class WiredImpl(val c: Context)(annottees: Any*)(wiredType: WiredType) {
 
   import c.universe._
 
-  private def buildProviderMethod(classDef: ClassDef): DefDef = classDef match {
+  private def buildProviderMethod(classDef: ClassDef): ValOrDefDef = classDef match {
     case q"""$_ class $name[..${params: Seq[TypeDef]}] $_(..${ctorParams: Seq[ValDef]})
                   extends { ..$_ }
                   with ..$_ { $_ => ..$_ }""" =>
 
       val providerArgs = ctorParams.map(p => q"${p.name}: io.scalaland.pulp.Provider[${p.tpt}]")
-      val ctorArgs = ctorParams.map(p => q"${p.name}.get()")
+      val ctorArgs = if (wiredType != WiredType.Singleton) ctorParams.map(p => q"${p.name}.get")
+      else ctorParams.map(p => q"io.scalaland.pulp.Provider.get[${p.tpt}]")
 
-      q"""implicit def implicitProvider[..$params](implicit ..$providerArgs)
-              : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-            new io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] {
-              lazy val get(): $name[..${params.map(_.name)}] = new $name[..${params.map(_.name)}](..$ctorArgs)
-            }""": DefDef
+      wiredType match {
+        case WiredType.Default =>
+          q"""implicit def implicitProvider[..$params](implicit ..$providerArgs)
+                  : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
+                io.scalaland.pulp.Provider.value(new $name[..${params.map(_.name)}](..$ctorArgs))""": DefDef
+
+        case WiredType.Factory =>
+          q"""implicit def implicitProvider[..$params](implicit ..$providerArgs)
+                  : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
+                io.scalaland.pulp.Provider.factory(new $name[..${params.map(_.name)}](..$ctorArgs))""": DefDef
+
+        case WiredType.Singleton if params.isEmpty =>
+          q"""implicit lazy val implicitProvider
+                  : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
+                io.scalaland.pulp.Provider.value(new $name[..${params.map(_.name)}](..$ctorArgs))""": ValDef
+
+        case WiredType.Singleton if params.nonEmpty =>
+          c.abort(c.enclosingPosition, "@Singleton cannot be used on parametric types")
+      }
   }
 
   private def extendCompanion(objectDef: ModuleDef, classDef: ClassDef): ModuleDef = objectDef match {
@@ -50,7 +65,7 @@ private[pulp] class WiredImpl(val c: Context)(annottees: Any*) {
     case List(Expr(classDef: ClassDef) :: Nil) =>
       c.Expr(q"""$classDef
                  ${createCompanion(classDef)}""")
-    case got => c.abort(c.enclosingPosition, s"Only class can be annotated with @Wired, got: $got")
+    case got => c.abort(c.enclosingPosition, s"@Wired, @Singleton or @Factory can only annotate class, got: $got")
   }
 
   def wire(): c.Expr[Any] = {

@@ -2,15 +2,14 @@ package io.scalaland.pulp
 
 import org.scalatest.FlatSpec
 
-class WiredSpec extends FlatSpec {
+class FactorySpec extends FlatSpec {
 
-  behavior of "@Wired annotation"
+  behavior of "@Factory annotation"
 
   it should "generate implicit Provider def for a monomorphic class without a companion" in {
     // given
     // when
-    @Wired
-    class MonoNoCompanion
+    @Factory class MonoNoCompanion
 
     // then
     assertCompiles("Provider.get[MonoNoCompanion]")
@@ -19,11 +18,12 @@ class WiredSpec extends FlatSpec {
   it should "generate implicit Provider def for a monomorphic class with a companion" in {
     // given
     // when
-    @Wired class MonoCompanion
+    @Factory class MonoCompanion
     object MonoCompanion
 
     object MonoCompanion2
-    @Wired class MonoCompanion2
+    @Factory
+    class MonoCompanion2
 
     // then
     assertCompiles("Provider.get[MonoCompanion]")
@@ -33,7 +33,7 @@ class WiredSpec extends FlatSpec {
   it should "generate implicit Provider def for a polymorphic class without a companion" in {
     // given
     // when
-    @Wired class PolyNoCompanion[T]
+    @Factory class PolyNoCompanion[T]
 
     // then
     assertCompiles("Provider.get[PolyNoCompanion[String]]")
@@ -42,11 +42,11 @@ class WiredSpec extends FlatSpec {
   it should "generate implicit Provider def for a polymorphic class with a companion" in {
     // given
     // when
-    @Wired class PolyCompanion[T]
+    @Factory class PolyCompanion[T]
     object PolyCompanion
 
     object PolyCompanion2
-    @Wired class PolyCompanion2[T]
+    @Factory class PolyCompanion2[T]
 
     // then
     assertCompiles("Provider.get[PolyCompanion[String]]")
@@ -60,7 +60,7 @@ class WiredSpec extends FlatSpec {
     implicit val doubleProvider: Provider[Double] = Provider.value(20.4)
 
     // when
-    @Wired class ComplexCase[T](t: T, name: String, size: Int)
+    @Factory class ComplexCase[T](t: T, name: String, size: Int)
 
     // then
     assertCompiles("Provider.get[ComplexCase[Double]]")

@@ -83,6 +83,7 @@ required by our class. We might pass it manually, write implicit by hand
 or take from companion object - remember however that only classes
 annotated with `@Wired` will have implicit `Provider`s generated.
 
-Additionally whether something will have one or more instances is kind
-of a undefined behavior now, so one should not rely on either classes
-being singletons or having each instance being different object.
+Additionally whether something will have one or more instances is not
+guaranteed for `@Wired` - if one need to ensure that there will be only
+one Provider or that each Provider of some type will always return new
+instance one should use `@Singleton` or `@Factory`.

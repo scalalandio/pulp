@@ -5,13 +5,13 @@ import scala.language.experimental.macros
 import scala.annotation.{StaticAnnotation, compileTimeOnly}
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
-class Wired extends StaticAnnotation {
+class Factory extends StaticAnnotation {
 
-  def macroTransform(annottees: Any*): Any = macro Wired.impl
+  def macroTransform(annottees: Any*): Any = macro Factory.impl
 }
 
-object Wired {
+object Factory {
 
   def impl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] =
-    new WiredImpl(c)(annottees)(WiredType.Default).wire().asInstanceOf[c.Expr[Any]]
+    new WiredImpl(c)(annottees)(WiredType.Factory).wire().asInstanceOf[c.Expr[Any]]
 }
