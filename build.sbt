@@ -1,6 +1,6 @@
 val versions = new {
-  val scalatestVersion = "3.0.4"
   val scalaVersion = "2.12.3"
+  val scalatestVersion = "3.0.4"
 }
 
 val settings = Seq(
@@ -45,7 +45,8 @@ val settings = Seq(
     "-Xlint:unsound-match",
     "-Xexperimental"
   ),
-  scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings")
+  scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"),
+  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 )
 
 val dependencies = Seq(
@@ -65,11 +66,7 @@ lazy val root = project
 
 lazy val pulp = crossProject
   .crossType(CrossType.Pure)
-  .settings(
-    moduleName := "pulp",
-    name := "pulp",
-    description := "Scala library for guiceless dependency injection"
-  )
+  .settings(moduleName := "pulp", name := "pulp", description := "Scala library for guiceless dependency injection")
   .settings(settings: _*)
   .settings(publishSettings: _*)
   .settings(dependencies: _*)
@@ -81,9 +78,7 @@ lazy val publishSettings = Seq(
   organization := "io.scalaland",
   homepage := Some(url("https://scalaland.io")),
   licenses := Seq("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-  scmInfo := Some(
-    ScmInfo(url("https://github.com/scalalandio/pulp"), "scm:git:git@github.com:scalalandio/pulp.git")
-  ),
+  scmInfo := Some(ScmInfo(url("https://github.com/scalalandio/pulp"), "scm:git:git@github.com:scalalandio/pulp.git")),
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
     if (isSnapshot.value)
