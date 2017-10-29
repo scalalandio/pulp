@@ -18,7 +18,7 @@ private[pulp] class WiredImpl(val c: Context)(annottees: Any*) {
       q"""implicit def implicitProvider[..$params](implicit ..$providerArgs)
               : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
             new io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] {
-              def get(): $name[..${params.map(_.name)}] = new $name[..${params.map(_.name)}](..$ctorArgs)
+              lazy val get(): $name[..${params.map(_.name)}] = new $name[..${params.map(_.name)}](..$ctorArgs)
             }""": DefDef
   }
 
