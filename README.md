@@ -87,3 +87,11 @@ Additionally whether something will have one or more instances is not
 guaranteed for `@Wired` - if one need to ensure that there will be only
 one Provider or that each Provider of some type will always return new
 instance one should use `@Singleton` or `@Factory`.
+
+Last but not least such implementation of `Provider`s is invariant - if
+we have `trait A` and `@Wired class AImpl extends A` it will not be
+resolved for `A` unless we explicitly provide
+
+```scala
+implicit val a = Provider.upcast[AImpl, A]`
+```
