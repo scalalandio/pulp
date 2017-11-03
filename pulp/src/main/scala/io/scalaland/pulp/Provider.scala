@@ -1,5 +1,9 @@
 package io.scalaland.pulp
 
+import scala.annotation.{implicitAmbiguous, implicitNotFound}
+
+@implicitAmbiguous("Provider[$T] is ambiguous - check your scope for redundant Provider[$T] val/def")
+@implicitNotFound("Provider[$T] not found, add annotation to $T and/or provide implicit Providers for constructor args")
 trait Provider[+T] {
 
   def get: T
