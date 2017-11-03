@@ -93,5 +93,5 @@ we have `trait A` and `@Wired class AImpl extends A` it will not be
 resolved for `A` unless we explicitly provide
 
 ```scala
-implicit val a = Provider.upcast[AImpl, A]`
+implicit val a = Provider.upcast[AImpl, A]
 ```
