@@ -95,3 +95,11 @@ resolved for `A` unless we explicitly provide
 ```scala
 implicit val a = Provider.upcast[AImpl, A]
 ```
+
+or (if implementation is accessible to interface's scope):
+
+```scala
+@ImplementsAs(classOf[AImpl]) class A
+
+@Wired class AImpl extends A
+```
