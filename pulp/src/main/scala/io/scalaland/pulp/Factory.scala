@@ -12,7 +12,7 @@ class Factory extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro Factory.impl
 }
 
-object Factory {
+private object Factory {
 
   def impl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = WiredImpl.impl(WiredImpl.Type.Factory)(c)(annottees)
 }

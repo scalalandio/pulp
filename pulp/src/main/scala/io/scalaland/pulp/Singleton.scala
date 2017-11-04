@@ -12,7 +12,7 @@ class Singleton extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro Singleton.impl
 }
 
-object Singleton {
+private object Singleton {
 
   def impl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = WiredImpl.impl(WiredImpl.Type.Singleton)(c)(annottees)
 }

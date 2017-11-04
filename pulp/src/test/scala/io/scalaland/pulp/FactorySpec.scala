@@ -22,8 +22,7 @@ class FactorySpec extends FlatSpec {
     object MonoCompanion
 
     object MonoCompanion2
-    @Factory
-    class MonoCompanion2
+    @Factory class MonoCompanion2
 
     // then
     assertCompiles("Provider.get[MonoCompanion]")
@@ -53,7 +52,7 @@ class FactorySpec extends FlatSpec {
     assertCompiles("Provider.get[PolyCompanion2[String]]")
   }
 
-  it should "generate implicit Provider def for a class with a parameters" in {
+  it should "generate implicit Provider def for a class with parameters" in {
     // given
     implicit val stringProvider: Provider[String] = Provider.value("test")
     implicit val intProvider:    Provider[Int] = Provider.value(10)

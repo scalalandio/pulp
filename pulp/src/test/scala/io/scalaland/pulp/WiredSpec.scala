@@ -9,8 +9,7 @@ class WiredSpec extends FlatSpec {
   it should "generate implicit Provider def for a monomorphic class without a companion" in {
     // given
     // when
-    @Wired
-    class MonoNoCompanion
+    @Wired class MonoNoCompanion
 
     // then
     assertCompiles("Provider.get[MonoNoCompanion]")
@@ -53,7 +52,7 @@ class WiredSpec extends FlatSpec {
     assertCompiles("Provider.get[PolyCompanion2[String]]")
   }
 
-  it should "generate implicit Provider def for a class with a parameters" in {
+  it should "generate implicit Provider def for a class with parameters" in {
     // given
     implicit val stringProvider: Provider[String] = Provider.value("test")
     implicit val intProvider:    Provider[Int] = Provider.value(10)

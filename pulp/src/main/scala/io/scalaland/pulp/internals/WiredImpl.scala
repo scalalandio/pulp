@@ -3,7 +3,7 @@ package io.scalaland.pulp.internals
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox.Context
 
-private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annottees: Any*) extends Loggers {
+private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annottees: Seq[Any]) extends Loggers {
 
   import c.universe._
 
@@ -55,13 +55,13 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
 
   def wire(): c.Expr[Any] = withDebugLog("Provider injection result") {
     annottees.toList match {
-      case List(Expr(classDef: ClassDef) :: Expr(objectDef: ModuleDef) :: Nil) =>
+      case Expr(classDef: ClassDef) :: Expr(objectDef: ModuleDef) :: Nil =>
         c.Expr(q"""$classDef
                    ${extendCompanion(objectDef, classDef)}""")
-      case List(Expr(objectDef: ModuleDef) :: Expr(classDef: ClassDef) :: Nil) =>
+      case Expr(objectDef: ModuleDef) :: Expr(classDef: ClassDef) :: Nil =>
         c.Expr(q"""${extendCompanion(objectDef, classDef)}
                    $classDef""")
-      case List(Expr(classDef: ClassDef) :: Nil) =>
+      case Expr(classDef: ClassDef) :: Nil =>
         c.Expr(q"""$classDef
                    ${createCompanion(classDef)}""")
       case got => c.abort(c.enclosingPosition, s"@Wired, @Singleton or @Factory can only annotate class, got: $got")
@@ -78,6 +78,6 @@ private[pulp] object WiredImpl {
     case object Singleton extends Type
   }
 
-  def impl(wiredType: WiredImpl.Type)(c: Context)(annottees: Any*): c.Expr[Any] =
+  def impl(wiredType: WiredImpl.Type)(c: Context)(annottees: Seq[c.Expr[Any]]): c.Expr[Any] =
     new WiredImpl(wiredType)(c)(annottees).wire().asInstanceOf[c.Expr[Any]]
 }

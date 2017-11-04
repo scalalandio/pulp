@@ -12,7 +12,7 @@ class Wired extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro Wired.impl
 }
 
-object Wired {
+private object Wired {
 
   def impl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = WiredImpl.impl(WiredImpl.Type.Default)(c)(annottees)
 }
