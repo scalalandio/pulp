@@ -1,5 +1,7 @@
 # Pulp
 
+![https://travis-ci.org/scalalandio/pulp](https://api.travis-ci.org/scalalandio/pulp.svg?branch=master)
+
 Too much fructose is not good for your health, so you should remove
 Guice from your diet. This small experimental project allows you to have
 your fruity projects with no Guice.
