@@ -7,7 +7,7 @@ import scala.language.experimental.macros
 import scala.annotation.{StaticAnnotation, compileTimeOnly}
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
-class ImplementedAs[T](implClass: Class[T]) extends StaticAnnotation {
+class ImplementedAs[T] extends StaticAnnotation {
 
   def macroTransform(annottees: Any*): Any = macro ImplementedAs.impl
 }
