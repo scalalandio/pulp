@@ -17,5 +17,5 @@ object Provider {
   def factory[T](value: => T): Provider[T] = new Provider[T] { def get: T = value }
   def value[T](value: => T): Provider[T] = new Provider[T] { lazy val get: T = value }
 
-  @inline def upcast[T : Provider, U >: T]: Provider[U] = apply[T]
+  @inline def upcast[T: Provider, U >: T]: Provider[U] = apply[T]
 }

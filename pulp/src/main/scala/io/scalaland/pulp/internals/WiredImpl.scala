@@ -11,10 +11,10 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
     case q"""$_ class $name[..${params: Seq[TypeDef]}] $_(..${ctorParams: Seq[ValDef]})
                   extends { ..$_ }
                   with ..$_ { $_ => ..$_ }""" =>
-
       val providerArgs = ctorParams.map(p => q"${p.name}: io.scalaland.pulp.Provider[${p.tpt}]")
-      val ctorArgs = if (wiredType != WiredImpl.Type.Singleton) ctorParams.map(p => q"${p.name}.get")
-      else ctorParams.map(p => q"io.scalaland.pulp.Provider.get[${p.tpt}]")
+      val ctorArgs =
+        if (wiredType != WiredImpl.Type.Singleton) ctorParams.map(p => q"${p.name}.get")
+        else ctorParams.map(p => q"io.scalaland.pulp.Provider.get[${p.tpt}]")
 
       withTraceLog("Provider implicit expanded") {
         wiredType match {

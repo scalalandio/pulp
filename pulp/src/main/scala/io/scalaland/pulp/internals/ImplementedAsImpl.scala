@@ -11,7 +11,6 @@ private[pulp] class ImplementedAsImpl(val c: Context)(annottees: Seq[Any]) exten
     case q"""$_ class $name[..${params: Seq[TypeDef]}] $_(..${ctorParams: Seq[ValDef]})
                   extends { ..$_ }
                   with ..$_ { $_ => ..$_ }""" =>
-
       val implClass = c.prefix.tree match { case q"new $_[..$_](classOf[${implClass}])" => implClass }
       val providerArg = q"provider: io.scalaland.pulp.Provider[$implClass]"
 
@@ -24,7 +23,6 @@ private[pulp] class ImplementedAsImpl(val c: Context)(annottees: Seq[Any]) exten
     case q"""$_ trait $name[..${params: Seq[TypeDef]}]
                   extends { ..$_ }
                   with ..$_ { $_ => ..$_ }""" =>
-
       val implClass = c.prefix.tree match { case q"new $_[..$_](classOf[${implClass}])" => implClass }
       val providerArg = q"provider: io.scalaland.pulp.Provider[$implClass]"
 

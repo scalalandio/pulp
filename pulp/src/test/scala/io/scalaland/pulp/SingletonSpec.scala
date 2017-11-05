@@ -29,4 +29,3 @@ class SingletonSpec extends FlatSpec {
     assertCompiles("Provider.get[MonoCompanion2]")
   }
 }
-
