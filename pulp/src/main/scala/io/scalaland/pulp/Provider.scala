@@ -7,6 +7,9 @@ import scala.annotation.{implicitAmbiguous, implicitNotFound}
 trait Provider[+T] {
 
   def get: T
+
+  def map[U](f: T => U): Provider[U] = flatMap(t => Provider.factory(f(t)))
+  def flatMap[U](f: T => Provider[U]): Provider[U] = f(get)
 }
 
 object Provider {
