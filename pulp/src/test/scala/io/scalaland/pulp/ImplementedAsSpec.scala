@@ -12,7 +12,7 @@ class ImplementedAsSpec extends FlatSpec {
 
   it should "generate implicit Provider def for a monomorphic class without a companion" in {
     // given
-    implicit val _: Provider[MonoNoCompanionImpl] = Provider.value(new MonoNoCompanionImpl)
+    implicit val _: Provider[MonoNoCompanionImpl] = Provider.const(new MonoNoCompanionImpl)
 
     // when
 
@@ -32,8 +32,8 @@ class ImplementedAsSpec extends FlatSpec {
 
   it should "generate implicit Provider def for a monomorphic class with a companion" in {
     // given
-    implicit val _: Provider[MonoCompanionImpl] = Provider.value(new MonoCompanionImpl)
-    implicit val _2: Provider[MonoCompanion2Impl] = Provider.value(new MonoCompanion2Impl)
+    implicit val _: Provider[MonoCompanionImpl] = Provider.const(new MonoCompanionImpl)
+    implicit val _2: Provider[MonoCompanion2Impl] = Provider.const(new MonoCompanion2Impl)
 
     // when
 

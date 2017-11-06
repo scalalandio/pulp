@@ -20,9 +20,13 @@ class SemiautoSpec extends FlatSpec {
 
     // then
     assertCompiles("Generic[C]")
-    assertCompiles("Provider.get[HNil]")
-    assertCompiles("Provider.get[B :: HNil]")
-    assertCompiles("Provider.get[A :: B :: HNil]")
+    assertCompiles("implicitly[Generic.Aux[C, A :: B :: HNil]]")
+    assertCompiles("implicitly[ProductProvider[HNil]]")
+    assertCompiles("Provider[B]")
+    assertCompiles("implicitly[ProductProvider[B :: HNil]]")
+    assertCompiles("Provider[A]")
+    assertCompiles("implicitly[ProductProvider[A :: B :: HNil]]")
+    assertCompiles("product[C, A :: B :: HNil]")
     assertCompiles("Provider.get[C]")
   }
 }

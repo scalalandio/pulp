@@ -54,9 +54,9 @@ class FactorySpec extends FlatSpec {
 
   it should "generate implicit Provider def for a class with parameters" in {
     // given
-    implicit val stringProvider: Provider[String] = Provider.value("test")
-    implicit val intProvider: Provider[Int] = Provider.value(10)
-    implicit val doubleProvider: Provider[Double] = Provider.value(20.4)
+    implicit val stringProvider: Provider[String] = Provider.const("test")
+    implicit val intProvider: Provider[Int] = Provider.const(10)
+    implicit val doubleProvider: Provider[Double] = Provider.const(20.4)
 
     // when
     @Factory class ComplexCase[T](t: T, name: String, size: Int)
