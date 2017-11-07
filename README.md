@@ -79,6 +79,7 @@ That's basically what Pulp does.
  * both monomorphic and polymorphic classes
  * existing companion objects will be extended and missing generated
  * class might have or have not dependencies passed via constructor
+ * type-class derivation via `import io.scalaland.pulp.semiauto._`
 
 ## Limitations
 
