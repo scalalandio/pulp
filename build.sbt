@@ -6,7 +6,7 @@ val versions = new {
 val settings = Seq(
   version := "0.0.2-SNAPSHOT",
   scalaVersion := versions.scalaVersion,
-  crossScalaVersions := Seq("2.11.11", "2.12.3"),
+  crossScalaVersions := Seq("2.12.3"),
   scalacOptions ++= Seq(
     "-target:jvm-1.8",
     "-encoding",
@@ -19,6 +19,7 @@ val settings = Seq(
     "-language:higherKinds",
     "-language:implicitConversions",
     "-Yno-adapted-args",
+    "-Ypartial-unification",
     "-Ywarn-dead-code",
     "-Ywarn-inaccessible",
     "-Ywarn-infer-any",
@@ -52,6 +53,7 @@ val settings = Seq(
 val dependencies = Seq(
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    "com.chuusai" %%% "shapeless" % "2.3.2",
     "org.scalatest" %%% "scalatest" % versions.scalatestVersion % "test"
   )
 )

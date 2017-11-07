@@ -21,7 +21,7 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
           case WiredImpl.Type.Default =>
             q"""implicit def implicitProvider[..$params](implicit ..$providerArgs)
                   : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-                io.scalaland.pulp.Provider.value(new $name[..${params.map(_.name)}](..$ctorArgs))""": DefDef
+                io.scalaland.pulp.Provider.const(new $name[..${params.map(_.name)}](..$ctorArgs))""": DefDef
 
           case WiredImpl.Type.Factory =>
             q"""implicit def implicitProvider[..$params](implicit ..$providerArgs)
@@ -31,7 +31,7 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
           case WiredImpl.Type.Singleton if params.isEmpty =>
             q"""implicit lazy val implicitProvider
                   : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-                io.scalaland.pulp.Provider.value(new $name[..${params.map(_.name)}](..$ctorArgs))""": ValDef
+                io.scalaland.pulp.Provider.const(new $name[..${params.map(_.name)}](..$ctorArgs))""": ValDef
 
           case WiredImpl.Type.Singleton if params.nonEmpty =>
             c.abort(c.enclosingPosition, "@Singleton cannot be used on parametric types")

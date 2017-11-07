@@ -2,20 +2,23 @@ package io.scalaland.pulp
 
 import scala.annotation.{implicitAmbiguous, implicitNotFound}
 
-@implicitAmbiguous("Provider[${T}] is ambiguous - check your scope for redundant Provider[$T] val/def")
-@implicitNotFound("Provider[${T}] not found, add annotation to ${T} or provide implicit Providers for constructor args")
-trait Provider[+T] {
+@implicitAmbiguous("Provider[${A}] is ambiguous - check your scope for redundant Provider[$A] val/def")
+@implicitNotFound("Provider[${A}] not found, add annotation to ${A} or provide implicit Providers for constructor args")
+trait Provider[A] {
 
-  def get: T
+  def get: A
+
+  def map[B](f: A => B): Provider[B] = flatMap(t => Provider.factory(f(t)))
+  def flatMap[B](f: A => Provider[B]): Provider[B] = f(get)
 }
 
 object Provider {
 
-  @inline def apply[T: Provider]: Provider[T] = implicitly[Provider[T]]
-  @inline def get[T: Provider]: T = apply[T].get
+  @inline def apply[A: Provider]: Provider[A] = implicitly[Provider[A]]
+  @inline def get[A: Provider]: A = apply[A].get
 
-  def factory[T](value: => T): Provider[T] = new Provider[T] { def get: T = value }
-  def value[T](value: => T): Provider[T] = new Provider[T] { lazy val get: T = value }
+  def const[A](value: => A): Provider[A] = new Provider[A] { lazy val get: A = value }
+  def factory[A](value: => A): Provider[A] = new Provider[A] { def get: A = value }
 
-  @inline def upcast[T: Provider, U >: T]: Provider[U] = apply[T]
+  @inline def upcast[A: Provider, B >: A]: Provider[B] = apply[A].map(identity)
 }
