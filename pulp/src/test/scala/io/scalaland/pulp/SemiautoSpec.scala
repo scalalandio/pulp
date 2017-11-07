@@ -12,7 +12,7 @@ class SemiautoSpec extends FlatSpec {
     class A
     @Wired
     class B
-    class C (val a: A, val b: B)
+    class C(val a: A, val b: B)
 
     // when
     import semiauto._
