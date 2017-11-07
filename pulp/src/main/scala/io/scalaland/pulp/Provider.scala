@@ -4,7 +4,7 @@ import scala.annotation.{implicitAmbiguous, implicitNotFound}
 
 @implicitAmbiguous("Provider[${A}] is ambiguous - check your scope for redundant Provider[$A] val/def")
 @implicitNotFound("Provider[${A}] not found, add annotation to ${A} or provide implicit Providers for constructor args")
-trait Provider[+A] {
+trait Provider[A] {
 
   def get: A
 
@@ -20,5 +20,5 @@ object Provider {
   def const[A](value: => A): Provider[A] = new Provider[A] { lazy val get: A = value }
   def factory[A](value: => A): Provider[A] = new Provider[A] { def get: A = value }
 
-  @inline def upcast[A: Provider, B >: A]: Provider[B] = apply[A]
+  @inline def upcast[A: Provider, B >: A]: Provider[B] = apply[A].map(identity)
 }
