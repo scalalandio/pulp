@@ -21,4 +21,6 @@ object Provider {
   def factory[A](value: => A): Provider[A] = new Provider[A] { def get: A = value }
 
   @inline def upcast[A: Provider, B >: A]: Provider[B] = apply[A].map(identity)
+
+  implicit def liftImplicit[A](implicit value: A) = const(value)
 }
