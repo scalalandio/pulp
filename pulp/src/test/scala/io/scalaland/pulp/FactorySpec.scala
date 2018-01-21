@@ -64,4 +64,17 @@ class FactorySpec extends FlatSpec {
     // then
     assertCompiles("Provider.get[ComplexCase[Double]]")
   }
+
+  it should "generate implicit Provider def for a class with multiple parameter lists" in {
+    // given
+    implicit val stringProvider: Provider[String] = Provider.const("test")
+    implicit val intProvider: Provider[Int] = Provider.const(10)
+    implicit val doubleProvider: Provider[Double] = Provider.const(20.4)
+
+    // when
+    @Factory class ComplexCase[T](t: T)(name: String)(size: Int)
+
+    // then
+    assertCompiles("Provider.get[ComplexCase[Double]]")
+  }
 }

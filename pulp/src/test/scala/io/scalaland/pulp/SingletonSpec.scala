@@ -28,4 +28,16 @@ class SingletonSpec extends FlatSpec {
     assertCompiles("Provider.get[MonoCompanion]")
     assertCompiles("Provider.get[MonoCompanion2]")
   }
+
+  it should "generate implicit Provider def for a class with multiple parameter lists" in {
+    // given
+    implicit val stringProvider: Provider[String] = Provider.const("test")
+    implicit val intProvider: Provider[Int] = Provider.const(10)
+
+    // when
+    @Singleton class ComplexCase(name: String)(size: Int)
+
+    // then
+    assertCompiles("Provider.get[ComplexCase]")
+  }
 }
