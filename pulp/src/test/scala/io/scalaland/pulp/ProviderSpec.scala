@@ -2,7 +2,7 @@ package io.scalaland.pulp
 
 import org.scalatest.FlatSpec
 
-class ProviderSpec extends FlatSpec  {
+class ProviderSpec extends FlatSpec {
 
   trait Test
   "Provider.liftImplicit" should "lift implicit A value to implicit Provider[A]" in {

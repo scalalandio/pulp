@@ -42,7 +42,8 @@ class ImplementedAsSpec extends FlatSpec {
     assertCompiles("Provider.get[MonoCompanion2]")
   }
 
-  @ImplementedAs[PolyNoCompanionImpl[T]] trait PolyNoCompanion[T]
+  @ImplementedAs[PolyNoCompanionImpl[T]]
+  trait PolyNoCompanion[T]
   @Wired class PolyNoCompanionImpl[T] extends PolyNoCompanion[T]
 
   it should "generate implicit Provider def for a polymorphic class without a companion" in {
@@ -55,7 +56,8 @@ class ImplementedAsSpec extends FlatSpec {
     assertCompiles("Provider.get[PolyNoCompanion[String]]")
   }
 
-  @ImplementedAs[PolyCompanionImpl[T]] trait PolyCompanion[T]
+  @ImplementedAs[PolyCompanionImpl[T]]
+  trait PolyCompanion[T]
   object PolyCompanion
   @Wired class PolyCompanionImpl[T] extends PolyCompanion[T]
 
