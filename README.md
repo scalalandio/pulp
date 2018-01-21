@@ -50,11 +50,11 @@ object Provider { def get[T: Provider]: T = implicitly[Provider[T]].get() }
 class A
 object A { implicit def provide: Provider[A] = () => new A }
 class B (a: A)
-object B { implicit def provide(a: Provider[A]): Provider[B] = () => new B(a.get()) }
+object B { implicit def provide(implicit a: Provider[A]): Provider[B] = () => new B(a.get()) }
 class C (b: B)
-object B { implicit def provide(b: Provider[B]): Provider[C] = () => new C(b.get()) }
+object B { implicit def provide(implicit b: Provider[B]): Provider[C] = () => new C(b.get()) }
 class D (b: B, c: C)
-object D { implicit def provide(b: Provider[B], c: Provider[C]): Provider[D] = () => new D(b.get(), c.get()) }
+object D { implicit def provide(implicit b: Provider[B], c: Provider[C]): Provider[D] = () => new D(b.get(), c.get()) }
 
 Provider.get[D]
 ```
@@ -72,6 +72,10 @@ Provider.get[D]
 ```
 
 That's basically what Pulp does.
+
+## Usage
+
+See [DOCS](DOCS.md)
 
 ## Features
 
