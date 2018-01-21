@@ -1,12 +1,12 @@
 val versions = new {
-  val scalaVersion = "2.12.3"
+  val scalaVersion = "2.12.4"
   val scalatestVersion = "3.0.4"
 }
 
 val settings = Seq(
   version := "0.0.2-SNAPSHOT",
   scalaVersion := versions.scalaVersion,
-  crossScalaVersions := Seq("2.12.3"),
+  crossScalaVersions := Seq("2.12.4"),
   scalacOptions ++= Seq(
     "-target:jvm-1.8",
     "-encoding",
@@ -47,13 +47,13 @@ val settings = Seq(
     "-Xexperimental"
   ),
   scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"),
-  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
 )
 
 val dependencies = Seq(
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-    "com.chuusai" %%% "shapeless" % "2.3.2",
+    "com.chuusai" %%% "shapeless" % "2.3.3",
     "org.scalatest" %%% "scalatest" % versions.scalatestVersion % "test"
   )
 )
