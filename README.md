@@ -10,12 +10,14 @@ your fruity projects with no Guice.
 
 ## Adding to project
 
+Library is available for Scala 2.11, 2.12 and Scala.js 0.6. Add it with:
+
 ```scala
 libraryDependencies += "io.scalaland" %% "pulp" % pulpVersion
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
-or if you cross-build with Scala.js
+or if you cross-build with Scala.js:
 
 ```scala
 libraryDependencies += "io.scalaland" %%% "pulp" % pulpVersion
