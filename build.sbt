@@ -19,7 +19,6 @@ val settings = Seq(
     "-language:higherKinds",
     "-language:implicitConversions",
     "-Yno-adapted-args",
-    "-Ypartial-unification",
     "-Ywarn-dead-code",
     "-Ywarn-inaccessible",
     "-Ywarn-infer-any",
