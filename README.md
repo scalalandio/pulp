@@ -8,6 +8,22 @@ Too much fructose is not good for your health, so you should remove
 Guice from your diet. This small experimental project allows you to have
 your fruity projects with no Guice.
 
+## Adding to project
+
+```scala
+libraryDependencies += "io.scalaland" %% "pulp" % pulpVersion
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+```
+
+or if you cross-build with Scala.js
+
+```scala
+libraryDependencies += "io.scalaland" %%% "pulp" % pulpVersion
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+```
+
+Latest version can be checked on Maven and is displayed on the badge above.
+
 ## Motivation
 
 I wanted to avoid runtime reflection based dependency injection
