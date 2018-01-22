@@ -6,7 +6,7 @@ val versions = new {
 val settings = Seq(
   version := "0.0.3-SNAPSHOT",
   scalaVersion := versions.scalaVersion,
-  crossScalaVersions := Seq("2.12.4"),
+  crossScalaVersions := Seq("2.11.12", "2.12.4"),
   scalacOptions ++= Seq(
     "-target:jvm-1.8",
     "-encoding",
@@ -47,7 +47,7 @@ val settings = Seq(
     "-Xexperimental"
   ),
   scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"),
-  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
+  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 )
 
 val dependencies = Seq(
