@@ -12,24 +12,24 @@ private[pulp] class ImplementedAsImpl(val c: Context)(annottees: Seq[Any]) exten
                   extends { ..$_ }
                   with ..$_ { $_ => ..$_ }""" =>
       val implClass = c.prefix.tree match { case q"new $_[$implClass]" => implClass }
-      val providerArg = q"provider: io.scalaland.pulp.Provider[$implClass]"
+      val providerArg = q"provider: _root_.io.scalaland.pulp.Provider[$implClass]"
 
       withTraceLog("Provider implicit expanded") {
         q"""implicit def implicitProvider[..$params](implicit $providerArg)
-                : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-              io.scalaland.pulp.Provider.upcast[$implClass, $name[..${params.map(_.name)}]]""": DefDef
+                : _root_.io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
+              _root_.io.scalaland.pulp.Provider.upcast[$implClass, $name[..${params.map(_.name)}]]""": DefDef
       }
 
     case q"""$_ trait $name[..${params: Seq[TypeDef]}]
                   extends { ..$_ }
                   with ..$_ { $_ => ..$_ }""" =>
       val implClass = c.prefix.tree match { case q"new $_[$implClass]" => implClass }
-      val providerArg = q"provider: io.scalaland.pulp.Provider[$implClass]"
+      val providerArg = q"provider: _root_.io.scalaland.pulp.Provider[$implClass]"
 
       withTraceLog("Provider implicit expanded") {
         q"""implicit def implicitProvider[..$params](implicit $providerArg)
-                : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-              io.scalaland.pulp.Provider.upcast[$implClass, $name[..${params.map(_.name)}]]""": DefDef
+                : _root_.io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
+              _root_.io.scalaland.pulp.Provider.upcast[$implClass, $name[..${params.map(_.name)}]]""": DefDef
       }
   }
 

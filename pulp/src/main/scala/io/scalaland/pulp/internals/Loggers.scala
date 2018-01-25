@@ -1,6 +1,6 @@
 package io.scalaland.pulp.internals
 
-private[pulp] trait Loggers {
+private[internals] trait Loggers {
 
   protected def withDebugLog[T](msg: String)(thunk: => T): T = withLog("pulp.debug", "DEBUG")(msg)(thunk)
 

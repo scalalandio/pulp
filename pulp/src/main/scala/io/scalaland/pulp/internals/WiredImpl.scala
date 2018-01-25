@@ -11,27 +11,27 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
     case q"""$_ class $name[..${params: Seq[TypeDef]}] $_(...${ctorParams: Seq[Seq[ValDef]]})
                   extends { ..$_ }
                   with ..$_ { $_ => ..$_ }""" =>
-      val providerArgs = ctorParams.flatten.map(p => q"${p.name}: io.scalaland.pulp.Provider[${p.tpt}]")
+      val providerArgs = ctorParams.flatten.map(p => q"${p.name}: _root_.io.scalaland.pulp.Provider[${p.tpt}]")
       val ctorArgs =
         if (wiredType != WiredImpl.Type.Singleton) ctorParams.map(_.map(p => q"${p.name}.get"))
-        else ctorParams.map(_.map(p => q"io.scalaland.pulp.Provider.get[${p.tpt}]"))
+        else ctorParams.map(_.map(p => q"_root_.io.scalaland.pulp.Provider.get[${p.tpt}]"))
 
       withTraceLog("Provider implicit expanded") {
         wiredType match {
           case WiredImpl.Type.Default =>
             q"""implicit def implicitProvider[..$params](implicit ..$providerArgs)
-                  : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-                io.scalaland.pulp.Provider.const(new $name[..${params.map(_.name)}](...$ctorArgs))""": DefDef
+                    : _root_.io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
+                 _root_.io.scalaland.pulp.Provider.const(new $name[..${params.map(_.name)}](...$ctorArgs))""": DefDef
 
           case WiredImpl.Type.Factory =>
             q"""implicit def implicitProvider[..$params](implicit ..$providerArgs)
-                  : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-                io.scalaland.pulp.Provider.factory(new $name[..${params.map(_.name)}](...$ctorArgs))""": DefDef
+                    : _root_.io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
+                  _root_.io.scalaland.pulp.Provider.factory(new $name[..${params.map(_.name)}](...$ctorArgs))""": DefDef
 
           case WiredImpl.Type.Singleton if params.isEmpty =>
             q"""implicit lazy val implicitProvider
-                  : io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-                io.scalaland.pulp.Provider.const(new $name[..${params.map(_.name)}](...$ctorArgs))""": ValDef
+                    : _root_.io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
+                  _root_.io.scalaland.pulp.Provider.const(new $name[..${params.map(_.name)}](...$ctorArgs))""": ValDef
 
           case WiredImpl.Type.Singleton if params.nonEmpty =>
             c.abort(c.enclosingPosition, "@Singleton cannot be used on parametric types")
