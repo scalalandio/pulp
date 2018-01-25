@@ -8,7 +8,7 @@ Too much fructose is not good for your health, so you should remove
 Guice from your diet. This small experimental project allows you to have
 your fruity projects with no Guice.
 
-## Adding to project
+## Getting started
 
 Library is available for Scala 2.11, 2.12 and Scala.js 0.6. Add it with:
 
@@ -25,6 +25,10 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 ```
 
 Latest version can be checked on Maven and is displayed on the badge above.
+
+## Usage
+
+See [DOCS](DOCS.md) for specific cases or read further for understanding the general idea.
 
 ## Motivation
 
@@ -90,10 +94,6 @@ Provider.get[D]
 ```
 
 That's basically what Pulp does.
-
-## Usage
-
-See [DOCS](DOCS.md)
 
 ## Features
 
