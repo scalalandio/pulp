@@ -1,6 +1,6 @@
 # Pulp
 
-![https://travis-ci.org/scalalandio/pulp](https://api.travis-ci.org/scalalandio/pulp.svg?branch=master)
+[![https://travis-ci.org/scalalandio/pulp](https://api.travis-ci.org/scalalandio/pulp.svg?branch=master)](https://travis-ci.org/scalalandio/pulp)
 [![Maven Central](https://img.shields.io/maven-central/v/io.scalaland/pulp_2.12.svg)](http://search.maven.org/#search%7Cga%7C1%7Cpulp)
 [![License](http://img.shields.io/:license-Apache%202-green.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
