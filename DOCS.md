@@ -69,6 +69,14 @@ Probably the best would be to default to `@Wired` and change them to
 @Factory class AsyncQueryBuilder
 ```
 
+Macro annotations support more cases than semiauto-generated `Provider`s:
+
+```scala
+@Wired class MultipleParamLists(param: String)(param2: Int)
+@Factory class WithImplicit(value: Double)(implicit ec: ExecutionContext)
+@Singleton class TypeBounded[F: Monad](init: F[String])
+```
+
 ## Interface-Implementation separation
 
 In case we want to split interface and implementation we can always use
@@ -89,7 +97,7 @@ use just annotation for this:
 
 ## Provider derivation
 
-In case class is case class or class has all its attributes public:
+In case the class is a case class or the class has all its attributes public:
 
 ```scala
 case class B (a: A)
@@ -103,4 +111,36 @@ scope:
 import io.scalaland.pulp.semiauto._
 Provider.get[B]
 Provider.get[C]
+```
+
+However, we need to remember, that current scope of semiauto is limited. It does not support:
+
+ * multiple parameter lists: explicit (`class A (i: Int)(d: Double)`) and implicit (`class B (implicit ec: ExecutionContext)`, `class C[F: Functor]`) - you need annotate the type to generate the provider,
+ * sum types - you need to crea an implicit `Provider` yourself, e.g. with `Provider.const` or `Provider.factory`,
+ * classes, that cannot be considered product types,
+ * overall anything that cannot have `Generic` representation derived by Shapeless.
+
+## Parametric classes
+
+Macro annotations support it out of the box:
+
+```scala
+@ImplementedAs[ParametricImpl[A]] trait Parametric[A]
+@Wired class ParametricImpl[A] extends Parametric[A]
+```
+
+Exception is the `@Singleton`, which currently requires a monomorphic implementation:
+
+```scala
+@Singleton class DoubleParametric extends Parametric[Double] // ok
+// @Singleton class AnyParametric[A] // doesn't compile
+```
+
+## Implicit params
+
+...are being automatically lifted to `Provider`:
+
+```scala
+implicit val ec: ExecutionContext = ...
+Provider.get[ExecutionContext]
 ```
