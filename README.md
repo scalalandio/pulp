@@ -29,7 +29,7 @@ Latest version can be checked on Maven and is displayed on the badge above.
 Ammonite users can try it out with:
 
 ```scala
-import $ivy.`io.scalaland:pulp_2.12:0.0.3`, io.scalaland.pulp._
+import $ivy.`io.scalaland:pulp_2.12:0.0.4`, io.scalaland.pulp._
 interp.load.plugin.ivy("org.scalamacros" % "paradise_2.12.4" % "2.1.0")
 ```
 
