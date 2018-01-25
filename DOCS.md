@@ -144,3 +144,7 @@ Exception is the `@Singleton`, which currently requires a monomorphic implementa
 implicit val ec: ExecutionContext = ...
 Provider.get[ExecutionContext]
 ```
+
+## Debugging
+
+Macro-generated `Provider`s can be previewed during compilation with `-Dpulp.debug=debug` or `-Dpulp.debug=trace` SBT JVM flags.
