@@ -33,6 +33,8 @@ import $ivy.`io.scalaland:pulp_2.12:0.0.4`, io.scalaland.pulp._
 interp.load.plugin.ivy("org.scalamacros" % "paradise_2.12.4" % "2.1.0")
 ```
 
+With Ammonite 1.1.0 you can [try out this showoff code](https://gist.github.com/MateuszKubuszok/595b1b6cb409f2ef0cbf5d5c914e1e1b)!
+
 ## Usage
 
 See [DOCS](DOCS.md) for specific cases or read further for understanding the general idea.
