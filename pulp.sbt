@@ -1,12 +1,14 @@
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
+
 val versions = new {
-  val scalaVersion = "2.12.4"
+  val scalaVersion = "2.12.6"
   val scalatestVersion = "3.0.4"
 }
 
 val settings = Seq(
-  version := "0.0.4",
+  version := "0.0.5",
   scalaVersion := versions.scalaVersion,
-  crossScalaVersions := Seq("2.11.12", "2.12.4"),
+  crossScalaVersions := Seq("2.11.12", "2.12.6"),
   scalacOptions ++= Seq(
     "-target:jvm-1.8",
     "-encoding",
@@ -59,15 +61,15 @@ val dependencies = Seq(
 
 lazy val root = project
   .in(file("."))
+  .settings(name := "pulp", description := "Pulp build")
   .settings(settings: _*)
   .settings(publishSettings: _*)
   .settings(noPublishSettings: _*)
   .aggregate(pulpJVM, pulpJS)
-  .dependsOn(pulpJVM, pulpJS)
 
-lazy val pulp = crossProject
+lazy val pulp = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .settings(moduleName := "pulp", name := "pulp", description := "Scala library for guiceless dependency injection")
+  .settings(name := "pulp", description := "Scala library for guiceless dependency injection")
   .settings(settings: _*)
   .settings(publishSettings: _*)
   .settings(dependencies: _*)

@@ -42,7 +42,7 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
   private def extendCompanion(objectDef: ModuleDef, classDef: ClassDef): ModuleDef = objectDef match {
     case q"$mods object $tname extends { ..$earlydefns } with ..$parents { $self => ..$body }" =>
       q"""$mods object $tname extends { ..$earlydefns } with ..$parents { $self =>
-            $body
+            ..$body
             ${buildProviderMethod(classDef)}
           }""": ModuleDef
   }

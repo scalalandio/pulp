@@ -36,7 +36,7 @@ private[pulp] class ImplementedAsImpl(val c: Context)(annottees: Seq[Any]) exten
   private def extendCompanion(objectDef: ModuleDef, classDef: ClassDef): ModuleDef = objectDef match {
     case q"$mods object $tname extends { ..$earlydefns } with ..$parents { $self => ..$body }" =>
       q"""$mods object $tname extends { ..$earlydefns } with ..$parents { $self =>
-            $body
+            ..$body
             ${buildProviderMethod(classDef)}
           }""": ModuleDef
   }
