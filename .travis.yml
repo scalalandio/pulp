@@ -1,25 +1,25 @@
-language: scala
+language:       scala
 scala:
-   - 2.11.5
-   - 2.11.12
-   - 2.12.0
-   - 2.12.4
+              - 2.11.12
+              - 2.12.7
 jdk:
-  - openjdk8
-
-dist: trusty
-sudo: false
-
+              - openjdk8
+              - oraclejdk8
+dist:           trusty
 cache:
-  directories:
-    - $HOME/.ivy2/cache
-    - $HOME/.sbt/boot/
-    - $HOME/.coursier/cache/
-
-before_cache:
-  # Tricks to avoid unnecessary cache updates
-  - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
-  - find $HOME/.sbt -name "*.lock" -delete
-
-script:
-  - sbt ++$TRAVIS_SCALA_VERSION clean "scalafmt --test" test
+              - "~/.ivy2"
+              - "~/.sbt"
+install:
+              - sudo apt-get update
+              - sudo apt-get install zsh
+              - sudo chmod +x scripts/*
+              - scripts/sbt update
+script:         scripts/run-all-tests.sh
+after_script:
+              - scripts/prepare-test-results-for-ci.sh
+              - find $HOME/.sbt -name "*.lock" | xargs rm
+              - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
+notifications:
+  email:
+    on_success: never
+    on_failure: change

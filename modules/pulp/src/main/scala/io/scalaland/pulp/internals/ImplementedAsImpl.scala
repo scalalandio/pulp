@@ -8,7 +8,7 @@ private[pulp] class ImplementedAsImpl(val c: Context)(annottees: Seq[Any]) exten
   import c.universe._
 
   private def buildProviderMethod(classDef: ClassDef): DefDef = classDef match {
-    case q"""$_ class $name[..${params: Seq[TypeDef]}] $_(..${ctorParams: Seq[ValDef]})
+    case q"""$_ class $name[..${params: Seq[TypeDef]}] $_(..${_: Seq[ValDef]})
                   extends { ..$_ }
                   with ..$_ { $_ => ..$_ }""" =>
       val implClass = c.prefix.tree match { case q"new $_[$implClass]" => implClass }
