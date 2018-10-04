@@ -7,6 +7,7 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
 
   import c.universe._
 
+  @SuppressWarnings(Array("org.wartremover.warts.Equals"))
   private def buildProviderMethod(classDef: ClassDef): ValOrDefDef = classDef match {
     case q"""$_ class $name[..${params: Seq[TypeDef]}] $_(...${ctorParams: Seq[Seq[ValDef]]})
                   extends { ..$_ }
