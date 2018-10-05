@@ -10,18 +10,28 @@ your fruity projects with no Guice.
 
 ## Getting started
 
-Library is available for Scala 2.11, 2.12 and Scala.js 0.6. Add it with:
+Library is available for Scala 2.11, 2.12, 2.13-M4 and Scala.js 0.6
+(Scala.js without 2.13.0-M4 due to a compiler bug in former ).
+
+Add it with (2.11, 2.12):
 
 ```scala
 libraryDependencies += "io.scalaland" %% "pulp" % pulpVersion
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
-or if you cross-build with Scala.js:
+or if you cross-build with Scala.js (2.11, 2.12):
 
 ```scala
 libraryDependencies += "io.scalaland" %%% "pulp" % pulpVersion
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+```
+
+or with Scala 2.13:
+
+```scala
+libraryDependencies += "io.scalaland" %% "pulp" % pulpVersion
+scalacOptions += "-Ymacro-annotations"
 ```
 
 Latest version can be checked on Maven and is displayed on the badge above.
@@ -29,7 +39,7 @@ Latest version can be checked on Maven and is displayed on the badge above.
 Ammonite users can try it out with:
 
 ```scala
-import $ivy.`io.scalaland:pulp_2.12:0.0.4`, io.scalaland.pulp._
+import $ivy.`io.scalaland:pulp_2.12:0.0.6`, io.scalaland.pulp._
 interp.load.plugin.ivy("org.scalamacros" % "paradise_2.12.4" % "2.1.0")
 ```
 
