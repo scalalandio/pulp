@@ -21,6 +21,11 @@ class FactorySpec extends Specification {
   @Factory class ComplexCase[T](t: T, name: String, size: Int)
   @Factory class ComplexCase2[T](t: T)(name: String)(size: Int)
 
+  trait TestTC[T]
+  @Factory class TCCase1[T: TestTC](implicit i: Int)
+  @Factory class TCCase2[T: TestTC]
+  @Factory class TCCase3[T: TestTC](d: Double)(implicit i: Int)
+
   "@Factory annotation" should {
 
     "generate implicit Provider def for a monomorphic class without a companion" in {
@@ -54,6 +59,16 @@ class FactorySpec extends Specification {
       implicit val doubleProvider: Provider[Double] = Provider.const(20.4)
 
       Provider.get[ComplexCase2[Double]] must not(beNull)
+    }
+
+    "generate implicit Provider def for a class with type class constraint" in {
+      implicit val stringTCProvider: Provider[TestTC[String]] = Provider.const(new TestTC[String] {})
+      implicit val doubleProvider: Provider[Double] = Provider.const(1.0)
+      implicit val intProvider: Provider[Int] = Provider.const(10)
+
+      Provider.get[TCCase1[String]] must not(beNull)
+      Provider.get[TCCase2[String]] must not(beNull)
+      Provider.get[TCCase3[String]] must not(beNull)
     }
   }
 }
