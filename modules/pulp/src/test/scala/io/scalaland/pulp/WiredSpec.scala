@@ -21,6 +21,11 @@ class WiredSpec extends Specification {
   @Wired class ComplexCase[T](t: T, name: String, size: Int)
   @Wired class ComplexCase2[T](t: T)(name: String)(size: Int)
 
+  trait TestTC[T]
+  @Wired class TCCase1[T: TestTC](implicit i: Int)
+  @Wired class TCCase2[T: TestTC]
+  @Wired class TCCase3[T: TestTC](d: Double)(implicit i: Int)
+
   "@Wired annotation" should {
 
     "generate implicit Provider def for a monomorphic class without a companion" in {
@@ -55,6 +60,16 @@ class WiredSpec extends Specification {
       implicit val doubleProvider: Provider[Double] = Provider.const(20.4)
 
       Provider.get[ComplexCase2[Double]] must not(beNull)
+    }
+
+    "generate implicit Provider def for a class with type class constraint" in {
+      implicit val stringTCProvider: Provider[TestTC[String]] = Provider.const(new TestTC[String] {})
+      implicit val doubleProvider: Provider[Double] = Provider.const(1.0)
+      implicit val intProvider: Provider[Int] = Provider.const(10)
+
+      Provider.get[TCCase1[String]] must not(beNull)
+      Provider.get[TCCase2[String]] must not(beNull)
+      Provider.get[TCCase3[String]] must not(beNull)
     }
   }
 }
