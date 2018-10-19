@@ -13,9 +13,13 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
                   extends { ..$_ }
                   with ..$_ { $_ => ..$_ }""" =>
       val providerArgs = ctorParams.flatten.map(p => q"${p.name}: _root_.io.scalaland.pulp.Provider[${p.tpt}]")
-      val ctorArgs =
+      val ctorArgsPreFix =
         if (wiredType != WiredImpl.Type.Singleton) ctorParams.map(_.map(p => q"${p.name}.get"))
         else ctorParams.map(_.map(p => q"_root_.io.scalaland.pulp.Provider.get[${p.tpt}]"))
+      val startWithImplicit = ctorParams.flatten.headOption.exists { case ValDef(mods, _, _, _) =>
+        mods.hasFlag(Flag.IMPLICIT)
+      }
+      val ctorArgs = if (startWithImplicit) Nil +: ctorArgsPreFix else ctorArgsPreFix
 
       withTraceLog("Provider implicit expanded") {
         wiredType match {
