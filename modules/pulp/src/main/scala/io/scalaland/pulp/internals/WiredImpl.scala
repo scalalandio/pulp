@@ -12,10 +12,12 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
     case q"""$_ class $name[..${params: Seq[TypeDef]}] $_(...${ctorParams: Seq[Seq[ValDef]]})
                   extends { ..$_ }
                   with ..$_ { $_ => ..$_ }""" =>
-      val providerArgs = ctorParams.flatten.map(p => q"${p.name}: _root_.io.scalaland.pulp.Provider[${p.tpt}]")
+      val paramsNames = params.map(_.name)
+      val providerArgs =
+        ctorParams.flatten.map(p => q"${p.name}: _root_.shapeless.Lazy[_root_.io.scalaland.pulp.Provider[${p.tpt}]]")
       val ctorArgsPreFix =
-        if (wiredType != WiredImpl.Type.Singleton) ctorParams.map(_.map(p => q"${p.name}.get"))
-        else ctorParams.map(_.map(p => q"_root_.io.scalaland.pulp.Provider.get[${p.tpt}]"))
+        if (wiredType != WiredImpl.Type.Singleton) ctorParams.map(_.map(p => q"${p.name}.value.get"))
+        else ctorParams.map(_.map(p => q"_root_.shapeless.lazily[_root_.io.scalaland.pulp.Provider[${p.tpt}]].get"))
       val startWithImplicit = ctorParams.flatten.headOption.exists { case ValDef(mods, _, _, _) =>
         mods.hasFlag(Flag.IMPLICIT)
       }
@@ -25,18 +27,24 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
         wiredType match {
           case WiredImpl.Type.Default =>
             q"""implicit def implicitProvider[..$params](implicit ..$providerArgs)
-                    : _root_.io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-                 _root_.io.scalaland.pulp.Provider.const(new $name[..${params.map(_.name)}](...$ctorArgs))""": DefDef
+                  : _root_.io.scalaland.pulp.Provider[$name[..$paramsNames]] =
+               _root_.io.scalaland.pulp.Provider.const(new $name[..$paramsNames](...$ctorArgs))""": DefDef
+
+          case WiredImpl.Type.Cached =>
+            val tag = q"cache_tag: _root_.io.scalaland.pulp.internals.Cache.Id[$name[..$paramsNames]]"
+            q"""implicit def implicitProvider[..$params](implicit ..${tag +: providerArgs})
+                  : _root_.io.scalaland.pulp.Provider[$name[..$paramsNames]] =
+               _root_.io.scalaland.pulp.Provider.cached(new $name[..$paramsNames](...$ctorArgs))""": DefDef
 
           case WiredImpl.Type.Factory =>
             q"""implicit def implicitProvider[..$params](implicit ..$providerArgs)
-                    : _root_.io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-                  _root_.io.scalaland.pulp.Provider.factory(new $name[..${params.map(_.name)}](...$ctorArgs))""": DefDef
+                    : _root_.io.scalaland.pulp.Provider[$name[..$paramsNames]] =
+                  _root_.io.scalaland.pulp.Provider.factory(new $name[..$paramsNames](...$ctorArgs))""": DefDef
 
           case WiredImpl.Type.Singleton if params.isEmpty =>
             q"""implicit lazy val implicitProvider
-                    : _root_.io.scalaland.pulp.Provider[$name[..${params.map(_.name)}]] =
-                  _root_.io.scalaland.pulp.Provider.const(new $name[..${params.map(_.name)}](...$ctorArgs))""": ValDef
+                    : _root_.io.scalaland.pulp.Provider[$name[..$paramsNames]] =
+                  _root_.io.scalaland.pulp.Provider.const(new $name[..$paramsNames](...$ctorArgs))""": ValDef
 
           case WiredImpl.Type.Singleton if params.nonEmpty =>
             c.abort(c.enclosingPosition, "@Singleton cannot be used on parametric types")
@@ -69,7 +77,8 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
       case Expr(classDef: ClassDef) :: Nil =>
         c.Expr(q"""$classDef
                    ${createCompanion(classDef)}""")
-      case got => c.abort(c.enclosingPosition, s"@Wired, @Singleton or @Factory can only annotate class, got: $got")
+      case got =>
+        c.abort(c.enclosingPosition, s"@Wired, @Cached, @Factory or @Singleton or can only annotate class, got: $got")
     }
   }
 }
@@ -79,6 +88,7 @@ private[pulp] object WiredImpl {
   sealed trait Type
   object Type {
     case object Default extends Type
+    case object Cached extends Type
     case object Factory extends Type
     case object Singleton extends Type
   }

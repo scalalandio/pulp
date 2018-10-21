@@ -11,7 +11,7 @@ trait Provider[A] {
   def flatMap[B](f: A => Provider[B]): Provider[B] = f(get)
 }
 
-object Provider {
+object Provider extends PlatformSpecific {
 
   @inline def apply[A: Provider]: Provider[A] = implicitly[Provider[A]]
   @inline def get[A: Provider]: A = apply[A].get
@@ -21,5 +21,5 @@ object Provider {
 
   @inline def upcast[A: Provider, B >: A]: Provider[B] = apply[A].map(identity)
 
-  implicit def liftImplicit[A](implicit value: A) = const(value)
+  implicit def liftImplicit[A](implicit value: A): Provider[A] = const(value)
 }

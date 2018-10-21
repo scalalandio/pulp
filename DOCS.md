@@ -38,7 +38,7 @@ down the dependency hierarchy.
 
 ## Macro annotations
 
-There are 3 flavors of macro annotation generating different Providers:
+There are 4 flavors of macro annotation generating different Providers:
 
  * `@Wired` - a default one. It generates following implementation:
     ```scala
@@ -47,6 +47,13 @@ There are 3 flavors of macro annotation generating different Providers:
     it reuses computed `A` value in scope where it was generated, but
     across different scopes it might be generate a different instances
     of a type-class,
+ * `@Cached` - similar to default but it caches globally first instance
+   obtained for a `WeakTypeTag`:
+    ```scala
+    def provider: Provider[A] = new Provider[A] { def: A = internals.Cache.query(...) }
+    ```
+    As long as two usages creates the same `WeakTypeTag` it will reuse
+    first instance,
  * `@Factory` - for *factories*. It generates following implementation:
     ```scala
     def provider: Provider[A] = new Provider[A] { def: A = ... }
@@ -61,10 +68,11 @@ There are 3 flavors of macro annotation generating different Providers:
     called.
 
 Probably the best would be to default to `@Wired` and change them to
-`@Factory` or `@Singleton` only where needed:
+`@Cached`, `@Factory` or `@Singleton` only where needed:
 
 ```scala
 @Wired class NormalClass
+@Cached class Storage
 @Singleton class Database
 @Factory class AsyncQueryBuilder
 ```
