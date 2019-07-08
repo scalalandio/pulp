@@ -78,7 +78,7 @@ private[pulp] class WiredImpl(wiredType: WiredImpl.Type)(val c: Context)(annotte
         c.Expr(q"""$classDef
                    ${createCompanion(classDef)}""")
       case got =>
-        c.abort(c.enclosingPosition, s"@Wired, @Cached, @Factory or @Singleton or can only annotate class, got: $got")
+        c.abort(c.enclosingPosition, s"@Wired, @Cached, @Factory or @Singleton or can only annotate class, got: ${got.toString}")
     }
   }
 }

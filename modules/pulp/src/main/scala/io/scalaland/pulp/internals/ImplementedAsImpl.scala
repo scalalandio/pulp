@@ -58,7 +58,7 @@ private[pulp] class ImplementedAsImpl(val c: Context)(annottees: Seq[Any]) exten
       case Expr(classDef: ClassDef) :: Nil =>
         c.Expr(q"""$classDef
                    ${createCompanion(classDef)}""")
-      case got => c.abort(c.enclosingPosition, s"@ImplementedAs can only annotate class, got: $got")
+      case got => c.abort(c.enclosingPosition, s"@ImplementedAs can only annotate class, got: ${got.toString}")
     }
   }
 }

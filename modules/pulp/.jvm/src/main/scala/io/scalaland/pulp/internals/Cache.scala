@@ -15,11 +15,11 @@ object Cache extends Loggers {
       val searchKey = tag.tpe.dealias.toString
       cache.get(searchKey) match {
         case Some(value) =>
-          withDebugLog(s"Obtained from cache by $tag") {
+          withDebugLog(s"Obtained from cache by ${tag.toString}") {
             value.asInstanceOf[A]
           }
         case None =>
-          withDebugLog(s"Cache empty, created for $tag") {
+          withDebugLog(s"Cache empty, created for ${tag.toString}") {
             val value = thunk
             cache.put(searchKey, value)
             value

@@ -83,6 +83,13 @@ object Settings extends Dependencies {
         // removed in 2.13.x
         "-Yno-adapted-args",
         "-Ypartial-unification",
+        "-Ywarn-inaccessible",
+        "-Ywarn-infer-any",
+        "-Ywarn-nullary-override",
+        "-Ywarn-nullary-unit",
+        "-Xlint:by-name-right-associative",
+        "-Xlint:unsound-match",
+        "-Xfuture",
         // only for 2.11.x
         "-Xexperimental"
       ) else if (scalaVersion.value.startsWith("2.12")) Set(

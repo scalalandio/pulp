@@ -19,7 +19,7 @@ private[internals] trait Loggers {
 
   private def withLog[T](level: Level)(msg: String)(thunk: => T): T = {
     val value = thunk
-    if (shouldLog(level)) { println(s"[$level] $msg:\n$value") }
+    if (shouldLog(level)) { println(s"[${level.name}] $msg:\n${value.toString}") }
     value
   }
 

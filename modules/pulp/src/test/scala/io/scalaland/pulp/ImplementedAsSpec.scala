@@ -12,7 +12,7 @@ class ImplementedAsSpec extends Specification {
 
     "generate implicit Provider def for a monomorphic class without a companion" in {
       // given
-      implicit val _: Provider[MonoNoCompanionImpl] = Provider.const(new MonoNoCompanionImpl)
+      implicit val _1: Provider[MonoNoCompanionImpl] = Provider.const(new MonoNoCompanionImpl)
 
       // when
 
@@ -32,7 +32,7 @@ class ImplementedAsSpec extends Specification {
 
     "generate implicit Provider def for a monomorphic class with a companion" in {
       // given
-      implicit val _: Provider[MonoCompanionImpl] = Provider.const(new MonoCompanionImpl)
+      implicit val _1: Provider[MonoCompanionImpl] = Provider.const(new MonoCompanionImpl)
       implicit val _2: Provider[MonoCompanion2Impl] = Provider.const(new MonoCompanion2Impl)
 
       // when
@@ -48,7 +48,7 @@ class ImplementedAsSpec extends Specification {
 
     "generate implicit Provider def for a polymorphic class without a companion" in {
       // given
-      implicit val _: Provider[String] = Provider.const("")
+      implicit val _1: Provider[String] = Provider.const("")
 
       // when
 
@@ -63,7 +63,7 @@ class ImplementedAsSpec extends Specification {
 
     "generate implicit Provider def for a polymorphic class a companion" in {
       // given
-      implicit val _: Provider[String] = Provider.const("")
+      implicit val _1: Provider[String] = Provider.const("")
 
       // when
 
