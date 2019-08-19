@@ -1,0 +1,331 @@
+<!DOCTYPE html><html><head><link href="META-INF/resources/webjars/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" /><link href="styles.css" rel="stylesheet" /><link rel="shortcut icon" type="image/png" href="favicon.png" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><style>
+.scalatex-site-Styles-headerLink{
+  color: #777;
+  opacity: 0.05;
+  text-decoration: none;
+}
+
+
+.scalatex-site-Styles-hoverContainer:hover .scalatex-site-Styles-headerLink{
+  color: #777;
+  opacity: 0.5;
+  text-decoration: none;
+}
+.scalatex-site-Styles-hoverContainer:hover .scalatex-site-Styles-headerLink:hover{
+  opacity: 1.0;
+}
+.scalatex-site-Styles-hoverContainer:hover .scalatex-site-Styles-headerLink:active{
+  opacity: 0.75;
+}
+
+.scalatex-site-Styles-content{
+  color: #777;
+  line-height: 1.6em;
+  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px;
+  padding: 0 1em;
+  padding-bottom: 50px;
+}
+.scalatex-site-Styles-content *{
+  position: relative;
+}
+.scalatex-site-Styles-content p{
+  text-align: justify;
+}
+.scalatex-site-Styles-content a:link{
+  color: #37a;
+  text-decoration: none;
+}
+.scalatex-site-Styles-content a:visited{
+  color: #949;
+  text-decoration: none;
+}
+.scalatex-site-Styles-content a:hover{
+  text-decoration: underline;
+}
+.scalatex-site-Styles-content a:active{
+  color: #000;
+  text-decoration: underline;
+}
+.scalatex-site-Styles-content code{
+  color: #000;
+}
+
+/*Workaround for bug in highlight.js IDEA theme*/
+span.hljs-tag, span.hljs-symbol{
+    background: none;
+}
+    </style><title>Pulp</title><script src="scripts.js"></script></head><body><div>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-116165806-1"></script>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-116165806-1');
+</script>
+<a href="https://github.com/scalalandio/pulp" style="position: absolute;top: 0px;right: 0px;border: 0;"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub" /></a>
+
+<div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Pulp" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;">Pulp<a class=" scalatex-site-Styles-headerLink" href="#Pulp" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /><h2 style="font-weight: 300;color: #ccc;padding: 0px;margin-top: 0px;">Dependency Injection with implicits and annotations</h2></div><div class=" scalatex-site-Styles-content">
+  <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Gettingstarted" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;">Getting started<a class=" scalatex-site-Styles-headerLink" href="#Gettingstarted" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
+    <p>
+      Library is available for Scala 2.11, 2.12, 2.13-M4 and Scala.js 0.6
+      (Scala.js without 2.13.0-M4 due to a compiler bug in former ).</p>
+    <p>
+      Add it with (2.11, 2.12):</p>
+    <pre><code class="scala scalatex-site-Styles-highlightMe">libraryDependencies += &quot;io.scalaland&quot; %% &quot;pulp&quot; % &quot;0.0.9&quot;
+addCompilerPlugin(&quot;org.scalamacros&quot; % &quot;paradise&quot; % &quot;2.1.0&quot; cross CrossVersion.full)</code></pre>
+    <p>
+      or if you cross-build with Scala.js (2.11, 2.12):</p>
+    <pre><code class="scala scalatex-site-Styles-highlightMe">libraryDependencies += &quot;io.scalaland&quot; %%% &quot;pulp&quot; % &quot;0.0.9&quot;
+addCompilerPlugin(&quot;org.scalamacros&quot; % &quot;paradise&quot; % &quot;2.1.0&quot; cross CrossVersion.full)</code></pre>
+    <p>
+      or with Scala 2.13:</p>
+    <pre><code class="scala scalatex-site-Styles-highlightMe">libraryDependencies += &quot;io.scalaland&quot; %% &quot;pulp&quot; % &quot;0.0.9&quot;
+scalacOptions += &quot;-Ymacro-annotations&quot;</code></pre>
+    <p>
+      Latest version can be checked on Maven and is displayed on the badge above.</p>
+    <p>
+      Ammonite users can try it out with:</p>
+    <pre><code class="scala scalatex-site-Styles-highlightMe">import $ivy.`io.scalaland:pulp_2.12:0.0.9`, io.scalaland.pulp._
+interp.load.plugin.ivy(&quot;org.scalamacros&quot; % &quot;paradise_2.12.4&quot; % &quot;2.1.0&quot;)</code></pre>
+    <p>
+      With Ammonite 1.1.0 you can <a href="https://gist.github.com/MateuszKubuszok/595b1b6cb409f2ef0cbf5d5c914e1e1b">try out this showoff code</a>!
+</p>
+  <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Usage" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;">Usage<a class=" scalatex-site-Styles-headerLink" href="#Usage" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
+    <h1 id="Generalmechanism" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Generalmechanism" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>General mechanism</h1>
+      <p>
+        Pulp uses implicits <code>Provider</code> type-class for dependency injection.</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">trait Provider[A] {
+
+  def get: A
+}</code></pre>
+      <p>
+        For basic cases like</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">class A(b: B, c: C) {
+  ..
+}</code></pre>
+      <p>
+        it provides macro annotations that would create implicit def inside
+        companion object</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">object A {
+  implicit def provider(implicit b: Provider[B], c: Provider[C]):
+    Provider[A] = ...
+}</code></pre>
+      <p>
+        In this example as long as Providers for <code>B</code> and <code>C</code> will be in scope,
+        then <code>Provider[C]</code> will return generated <code>Provider[C]</code> while
+        <code>Provider.get[C]</code> will return <code>C</code> value.</p>
+      <p>
+        As we can see this mechanism relies on propagating implicit Providers
+        down the dependency hierarchy.
+</p>
+    <h1 id="Macroannotations" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Macroannotations" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Macro annotations</h1>
+      <p>
+        There are 4 flavors of macro annotation generating different Providers:</p>
+      <ul>
+        <li>
+          <p>
+            <code>@Wired</code> - a default one. It generates following implementation:</p>
+          <pre><code class="scala scalatex-site-Styles-highlightMe">def provider: Provider[A] = new Provider[A] { lazy val: A = ... }</code></pre>
+          <p>
+            it reuses computed `A` value in scope where it was generated, but
+            across different scopes it might be generate a different instances
+            of a type-class,</p></li>
+        <li>
+          <p>
+            <code>@Cached</code> - similar to default but it caches globally first instance
+            obtained for a <code>WeakTypeTag</code>:</p>
+          <pre><code class="scala scalatex-site-Styles-highlightMe">def provider: Provider[A] = new Provider[A] { def: A = internals.Cache.query(...) }</code></pre>
+          <p>
+            As long as two usages creates the same <code>WeakTypeTag</code> it will reuse
+            first instance,</p></li>
+        <li>
+          <p>
+            <code>@Factory</code> - for <i>factories</i>. It generates following implementation:</p>
+          <pre><code class="scala scalatex-site-Styles-highlightMe">def provider: Provider[A] = new Provider[A] { def: A = ... }</code></pre>
+          <p>
+            it guarantees to return new instance of <code>A</code> each time <code>get</code> is called,</p></li>
+        <li>
+          <p>
+            <code>@Singleton</code> - It generates following implementation:</p>
+          <pre><code class="scala scalatex-site-Styles-highlightMe">lazy val provider: Provider[A] = new Provider[A] { lazy val: A = ... }</code></pre>
+          <p>
+            it guarantees to return the same instance of <code>A</code> each time <code>get</code> is called.</p></li></ul>
+      <p>
+        Probably the best would be to default to <code>@Wired</code> and change them to
+        <code>@Cached</code>, <code>@Factory</code> or <code>@Singleton</code> only where needed:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">@Wired class NormalClass
+@Cached class Storage
+@Singleton class Database
+@Factory class AsyncQueryBuilder</code></pre>
+      <p>
+        Macro annotations support more cases than semiauto-generated <code>Provider</code>s:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">@Wired class MultipleParamLists(param: String)(param2: Int)
+@Factory class WithImplicit(value: Double)(implicit ec: ExecutionContext)
+@Singleton class TypeBounded[F: Monad](init: F[String])
+</code></pre>
+    <h1 id="Interface-Implementationseparation" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Interface-Implementationseparation" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Interface-Implementation separation</h1>
+      <p>
+        In case we want to split interface and implementation we can always use</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">trait A
+@Wired class AImpl extends A
+implicit aProvider: Provider[A] = Provider.upcast[AImpl, A]</code></pre>
+      <p>
+        However, in case both are defined in the same scope one would prefer to
+        use just annotation for this:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">@ImplemetendAs[AImpl] class A
+@Wired class AImpl extends A
+</code></pre>
+    <h1 id="Providerderivation" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Providerderivation" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Provider derivation</h1>
+      <p>
+        In case the class is a case class or the class has all its attributes public:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">case class B (a: A)
+class C (val a: A)</code></pre>
+      <p>
+        we might use derivation to generate provider using those available in scope:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">import io.scalaland.pulp.semiauto._
+Provider.get[B]
+Provider.get[C]</code></pre>
+      <p>
+        However, we need to remember, that current scope of semiauto is limited. It does not support:</p>
+      <ul>
+         <li>
+           multiple parameter lists: explicit (<code>class A (i: Int)(d: Double)</code>) and implicit (<code>class B (implicit ec: ExecutionContext)</code>, <code>class C[F: Functor]</code>) - you need annotate the type to generate the provider,</li>
+         <li>
+           sum types - you need to create an implicit <code>Provider</code> yourself, e.g. with <code>Provider.const</code> or <code>Provider.factory</code>,</li>
+         <li>
+           classes, that cannot be considered product types,</li>
+         <li>
+           overall anything that cannot have <code>Generic</code> representation derived by Shapeless.
+</li></ul>
+    <h1 id="Parametricclasses" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Parametricclasses" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Parametric classes</h1>
+      <p>
+        Macro annotations support it out of the box:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">@ImplementedAs[ParametricImpl[A]] trait Parametric[A]
+@Wired class ParametricImpl[A] extends Parametric[A]</code></pre>
+      <p>
+        Exception is the <code>@Singleton</code>, which currently requires a monomorphic implementation:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">@Singleton class DoubleParametric extends Parametric[Double] // ok
+// @Singleton class AnyParametric[A] // doesn't compile
+</code></pre>
+    <h1 id="Implicitparams" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Implicitparams" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Implicit params</h1>
+      <p>
+        ...are being automatically lifted to <code>Provider</code>:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">implicit val ec: ExecutionContext = ...
+Provider.get[ExecutionContext]
+</code></pre>
+    <h1 id="Debugging" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Debugging" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Debugging</h1>
+      <p>
+        Macro-generated <code>Provider</code>s can be previewed during compilation with <code>-Dpulp.debug=debug</code> or <code>-Dpulp.debug=trace</code> SBT JVM flags.
+</p>
+  <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Motivation" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;">Motivation<a class=" scalatex-site-Styles-headerLink" href="#Motivation" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
+    <p>
+      I wanted to avoid runtime reflection based dependency injection
+      in my program while still avoiding the need to pass everything manually.
+      Existing ways of doing DI in Scala that I knew of were:</p>
+    <ul>
+       <li>
+         manual dependency injection</li>
+       <li>
+         usage of runtime reflection like <a href="https://github.com/google/guice">Guice</a>
+         or one used by <a href="https://spring.io">Spring Framework</a></li>
+       <li>
+         semi-manual DI via something like <a href="https://github.com/adamw/macwire">MacWire</a></li>
+       <li>
+         usage of Scala's built-in implicits</li></ul>
+    <p>
+      All of above have some pros and cons thought it's mostly up to
+      programmers' taste to decide which trade off they like better (though
+      they would often defend their own choice as the only reasonable).</p>
+    <p>
+      I wanted to go with implicits, but that generating a bit of a boilerplate:</p>
+    <pre><code class="scala scalatex-site-Styles-highlightMe">class A
+class B (implicit a: A)
+class C (implicit b: B)
+class D (implicit b: B, c: C)
+
+implicit val a: A = new A
+implicit val b: B = new B
+implicit val c: C = new C</code></pre>
+    <p>
+      Additionally we pollute the scope with tons of manually written
+      implicits, including these passed by constructor.</p>
+    <p>
+      Instead we could move them to companion objects and wrap in a dedicated
+      type to ensure they won't accidentally mix with other implicits:</p>
+    <pre><code class="scala scalatex-site-Styles-highlightMe">trait Provider[T] { def get(): T }
+object Provider { def get[T: Provider]: T = implicitly[Provider[T]].get() }
+
+class A
+object A { implicit def provide: Provider[A] = () =&gt; new A }
+class B (a: A)
+object B { implicit def provide(implicit a: Provider[A]): Provider[B] = () =&gt; new B(a.get()) }
+class C (b: B)
+object B { implicit def provide(implicit b: Provider[B]): Provider[C] = () =&gt; new C(b.get()) }
+class D (b: B, c: C)
+object D { implicit def provide(implicit b: Provider[B], c: Provider[C]): Provider[D] = () =&gt; new D(b.get(), c.get()) }
+
+Provider.get[D]</code></pre>
+    <p>
+      However, as we can see it brings a lot of boilerplate to the table.
+      But what if we generated all of that code? E.g. with macro annotations:</p>
+    <pre><code class="scala scalatex-site-Styles-highlightMe">@Wired class A
+@Wired class B (a: A)
+@Wired class C (b: B)
+@Wired class D (b: B, c: C)
+
+Provider.get[D]</code></pre>
+    <p>
+      That's basically what Pulp does.
+</p>
+  <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Features" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;">Features<a class=" scalatex-site-Styles-headerLink" href="#Features" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
+    <ul>
+      <li>
+        both monomorphic and polymorphic classes</li>
+      <li>
+        existing companion objects will be extended and missing generated</li>
+      <li>
+        class might have or have not dependencies passed via constructor</li>
+      <li>
+        type-class derivation via <code>import io.scalaland.pulp.semiauto._</code>
+</li></ul>
+  <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Limitations" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;">Limitations<a class=" scalatex-site-Styles-headerLink" href="#Limitations" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
+    <p>
+      Pulp uses implicits for passing objects around. It means that
+      <code>Provider[T]</code> must be in scope of initialization for each dependency
+      required by our class. We might pass it manually, write implicit by hand
+      or take from companion object - remember however that only classes
+      annotated with <code>@Wired</code> will have implicit <code>Provider</code>s generated.</p>
+    <p>
+      Additionally whether something will have one or more instances is not
+      guaranteed for <code>@Wired</code> - if one need to ensure that there will be only
+      one Provider or that each Provider of some type will always return new
+      instance one should use <code>@Singleton</code> or <code>@Factory</code>. If there might be
+      arguments available in first usage scopes, Provider needs arguments from
+      scope, but <code>@Singleton</code> doesn't work you might use <code>@Cached</code>.</p>
+    <p>
+      Last but not least such implementation of <code>Provider</code>s is invariant - if
+      we have <code>trait A</code> and <code>@Wired class AImpl extends A</code> it will not be
+      resolved for <code>A</code> unless we explicitly provide</p>
+    <pre><code class="scala scalatex-site-Styles-highlightMe">implicit val a = Provider.upcast[AImpl, A]</code></pre>
+    <p>
+      or (if implementation is accessible to interface's scope):</p>
+    <pre><code class="scala scalatex-site-Styles-highlightMe">@ImplementedAs[AImpl] class A
+
+@Wired class AImpl extends A</code></pre></div></div><script>
+    scalatex.scrollspy.Controller().main(
+      [{"value":"Pulp","children":[{"value":"Getting started","children":[]},{"value":"Usage","children":[{"value":"General mechanism","children":[]},{"value":"Macro annotations","children":[]},{"value":"Interface-Implementation separation","children":[]},{"value":"Provider derivation","children":[]},{"value":"Parametric classes","children":[]},{"value":"Implicit params","children":[]},{"value":"Debugging","children":[]}]},{"value":"Motivation","children":[]},{"value":"Features","children":[]},{"value":"Limitations","children":[]}]}]
+  )</script><script>
+    ['DOMContentLoaded', 'load'].forEach(function(ev){
+      addEventListener(ev, function(){
+        Array.prototype.forEach.call(
+          document.getElementsByClassName('scalatex-site-Styles-highlightMe'),
+          hljs.highlightBlock
+        );
+      })
+    })
+  </script></body></html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
