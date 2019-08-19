@@ -39,3 +39,7 @@ lazy val readme = scalatex.ScalatexReadme(
     git.remoteRepo := "git@github.com:scalalandio/pulp.git",
     Jekyll / makeSite / includeFilter := new FileFilter { def accept(p: File) = true }
   )
+
+addCommandAlias("fullTest", ";test;scalastyle")
+addCommandAlias("fullCoverageTest", ";coverage;test;coverageReport;coverageAggregate;scalastyle")
+addCommandAlias("relock", ";unlock;reload;update;lock")
