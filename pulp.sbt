@@ -24,3 +24,18 @@ lazy val pulp = crossProject(JVMPlatform, JSPlatform).crossType(CrossType.Pure).
 
 lazy val pulpJVM = pulp.jvm
 lazy val pulpJS = pulp.js
+
+lazy val readme = scalatex.ScalatexReadme(
+    projectId = "readme",
+    wd        = file(""),
+    url       = "https://github.com/scalalandio/pulp/tree/master",
+    source    = "Readme"
+  )
+  .configureModule
+  .noPublish
+  .enablePlugins(GhpagesPlugin)
+  .settings(
+    siteSourceDirectory := target.value / "scalatex",
+    git.remoteRepo := "git@github.com:scalalandio/pulp.git",
+    Jekyll / makeSite / includeFilter := new FileFilter { def accept(p: File) = true }
+  )

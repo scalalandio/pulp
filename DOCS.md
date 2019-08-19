@@ -124,7 +124,7 @@ Provider.get[C]
 However, we need to remember, that current scope of semiauto is limited. It does not support:
 
  * multiple parameter lists: explicit (`class A (i: Int)(d: Double)`) and implicit (`class B (implicit ec: ExecutionContext)`, `class C[F: Functor]`) - you need annotate the type to generate the provider,
- * sum types - you need to crea an implicit `Provider` yourself, e.g. with `Provider.const` or `Provider.factory`,
+ * sum types - you need to create an implicit `Provider` yourself, e.g. with `Provider.const` or `Provider.factory`,
  * classes, that cannot be considered product types,
  * overall anything that cannot have `Generic` representation derived by Shapeless.
 

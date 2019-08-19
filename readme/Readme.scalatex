@@ -1,0 +1,294 @@
+@import Main._
+@import scalatex.site._
+
+@raw("""<script async src="https://www.googletagmanager.com/gtag/js?id=UA-116165806-1"></script>""")
+
+@script
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-116165806-1');
+
+@a(
+  href:="https://github.com/scalalandio/pulp",
+  position.absolute,
+  top:=0,right:=0,border:=0,
+  img(
+    src:="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png",
+    alt:="Fork me on GitHub"
+  )
+)
+
+@sect("Pulp", "Dependency Injection with implicits and annotations")
+  @sect{Getting started}
+    @p
+      Library is available for Scala 2.11, 2.12, 2.13-M4 and Scala.js 0.6
+      (Scala.js without 2.13.0-M4 due to a compiler bug in former ).
+    @p
+      Add it with (2.11, 2.12):
+    @hl.scala
+      libraryDependencies += "io.scalaland" %% "pulp" % "0.0.9"
+      addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+    @p
+      or if you cross-build with Scala.js (2.11, 2.12):
+    @hl.scala
+      libraryDependencies += "io.scalaland" %%% "pulp" % "0.0.9"
+      addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+    @p
+      or with Scala 2.13:
+    @hl.scala
+      libraryDependencies += "io.scalaland" %% "pulp" % "0.0.9"
+      scalacOptions += "-Ymacro-annotations"
+    @p
+      Latest version can be checked on Maven and is displayed on the badge above.
+    @p
+      Ammonite users can try it out with:
+    @hl.scala
+      import $ivy.`io.scalaland:pulp_2.12:0.0.9`, io.scalaland.pulp._
+      interp.load.plugin.ivy("org.scalamacros" % "paradise_2.12.4" % "2.1.0")
+    @p
+      With Ammonite 1.1.0 you can @lnk("try out this showoff code", "https://gist.github.com/MateuszKubuszok/595b1b6cb409f2ef0cbf5d5c914e1e1b")!
+
+  @sect{Usage}
+    @sect{General mechanism}
+      @p
+        Pulp uses implicits @code{Provider} type-class for dependency injection.
+      @hl.scala
+        trait Provider[A] {
+
+          def get: A
+        }
+      @p
+        For basic cases like
+      @hl.scala
+        class A(b: B, c: C) {
+          ..
+        }
+      @p
+        it provides macro annotations that would create implicit def inside
+        companion object
+      @hl.scala
+        object A {
+          implicit def provider(implicit b: Provider[B], c: Provider[C]):
+            Provider[A] = ...
+        }
+      @p
+        In this example as long as Providers for @code{B} and @code{C} will be in scope,
+        then @code{Provider[C]} will return generated @code{Provider[C]} while
+        @code{Provider.get[C]} will return @code{C} value.
+      @p
+        As we can see this mechanism relies on propagating implicit Providers
+        down the dependency hierarchy.
+
+    @sect{Macro annotations}
+      @p
+        There are 4 flavors of macro annotation generating different Providers:
+      @ul
+        @li
+          @p
+            @code{@@Wired} - a default one. It generates following implementation:
+          @hl.scala
+            def provider: Provider[A] = new Provider[A] { lazy val: A = ... }
+          @p
+            it reuses computed `A` value in scope where it was generated, but
+            across different scopes it might be generate a different instances
+            of a type-class,
+        @li
+          @p
+            @code{@@Cached} - similar to default but it caches globally first instance
+            obtained for a @code{WeakTypeTag}:
+          @hl.scala
+            def provider: Provider[A] = new Provider[A] { def: A = internals.Cache.query(...) }
+          @p
+            As long as two usages creates the same @code{WeakTypeTag} it will reuse
+            first instance,
+        @li
+          @p
+            @code{@@Factory} - for @i{factories}. It generates following implementation:
+          @hl.scala
+            def provider: Provider[A] = new Provider[A] { def: A = ... }
+          @p
+            it guarantees to return new instance of @code{A} each time @code{get} is called,
+        @li
+          @p
+            @code{@@Singleton} - It generates following implementation:
+          @hl.scala
+            lazy val provider: Provider[A] = new Provider[A] { lazy val: A = ... }
+          @p
+            it guarantees to return the same instance of @code{A} each time @code{get} is called.
+      @p
+        Probably the best would be to default to @code{@@Wired} and change them to
+        @code{@@Cached}, @code{@@Factory} or @code{@@Singleton} only where needed:
+      @hl.scala
+        @@Wired class NormalClass
+        @@Cached class Storage
+        @@Singleton class Database
+        @@Factory class AsyncQueryBuilder
+      @p
+        Macro annotations support more cases than semiauto-generated @code{Provider}s:
+      @hl.scala
+        @@Wired class MultipleParamLists(param: String)(param2: Int)
+        @@Factory class WithImplicit(value: Double)(implicit ec: ExecutionContext)
+        @@Singleton class TypeBounded[F: Monad](init: F[String])
+
+    @sect{Interface-Implementation separation}
+      @p
+        In case we want to split interface and implementation we can always use
+      @hl.scala
+        trait A
+        @@Wired class AImpl extends A
+        implicit aProvider: Provider[A] = Provider.upcast[AImpl, A]
+      @p
+        However, in case both are defined in the same scope one would prefer to
+        use just annotation for this:
+      @hl.scala
+        @@ImplemetendAs[AImpl] class A
+        @@Wired class AImpl extends A
+
+    @sect{Provider derivation}
+      @p
+        In case the class is a case class or the class has all its attributes public:
+      @hl.scala
+        case class B (a: A)
+        class C (val a: A)
+      @p
+        we might use derivation to generate provider using those available in scope:
+      @hl.scala
+        import io.scalaland.pulp.semiauto._
+        Provider.get[B]
+        Provider.get[C]
+      @p
+        However, we need to remember, that current scope of semiauto is limited. It does not support:
+      @ul
+         @li
+           multiple parameter lists: explicit (@code{class A (i: Int)(d: Double)}) and implicit (@code{class B (implicit ec: ExecutionContext)}, @code{class C[F: Functor]}) - you need annotate the type to generate the provider,
+         @li
+           sum types - you need to create an implicit @code{Provider} yourself, e.g. with @code{Provider.const} or @code{Provider.factory},
+         @li
+           classes, that cannot be considered product types,
+         @li
+           overall anything that cannot have @code{Generic} representation derived by Shapeless.
+
+    @sect{Parametric classes}
+      @p
+        Macro annotations support it out of the box:
+      @hl.scala
+        @@ImplementedAs[ParametricImpl[A]] trait Parametric[A]
+        @@Wired class ParametricImpl[A] extends Parametric[A]
+      @p
+        Exception is the @code{@@Singleton}, which currently requires a monomorphic implementation:
+      @hl.scala
+        @@Singleton class DoubleParametric extends Parametric[Double] // ok
+        // @@Singleton class AnyParametric[A] // doesn't compile
+
+    @sect{Implicit params}
+      @p
+        ...are being automatically lifted to @code{Provider}:
+      @hl.scala
+        implicit val ec: ExecutionContext = ...
+        Provider.get[ExecutionContext]
+
+    @sect{Debugging}
+      @p
+        Macro-generated @code{Provider}s can be previewed during compilation with @code{-Dpulp.debug=debug} or @code{-Dpulp.debug=trace} SBT JVM flags.
+
+  @sect{Motivation}
+    @p
+      I wanted to avoid runtime reflection based dependency injection
+      in my program while still avoiding the need to pass everything manually.
+      Existing ways of doing DI in Scala that I knew of were:
+    @ul
+       @li
+         manual dependency injection
+       @li
+         usage of runtime reflection like @lnk("Guice", "https://github.com/google/guice")
+         or one used by @lnk("Spring Framework", "https://spring.io")
+       @li
+         semi-manual DI via something like @lnk("MacWire", "https://github.com/adamw/macwire")
+       @li
+         usage of Scala's built-in implicits
+    @p
+      All of above have some pros and cons thought it's mostly up to
+      programmers' taste to decide which trade off they like better (though
+      they would often defend their own choice as the only reasonable).
+    @p
+      I wanted to go with implicits, but that generating a bit of a boilerplate:
+    @hl.scala
+      class A
+      class B (implicit a: A)
+      class C (implicit b: B)
+      class D (implicit b: B, c: C)
+
+      implicit val a: A = new A
+      implicit val b: B = new B
+      implicit val c: C = new C
+    @p
+      Additionally we pollute the scope with tons of manually written
+      implicits, including these passed by constructor.
+    @p
+      Instead we could move them to companion objects and wrap in a dedicated
+      type to ensure they won't accidentally mix with other implicits:
+    @hl.scala
+      trait Provider[T] { def get(): T }
+      object Provider { def get[T: Provider]: T = implicitly[Provider[T]].get() }
+
+      class A
+      object A { implicit def provide: Provider[A] = () => new A }
+      class B (a: A)
+      object B { implicit def provide(implicit a: Provider[A]): Provider[B] = () => new B(a.get()) }
+      class C (b: B)
+      object B { implicit def provide(implicit b: Provider[B]): Provider[C] = () => new C(b.get()) }
+      class D (b: B, c: C)
+      object D { implicit def provide(implicit b: Provider[B], c: Provider[C]): Provider[D] = () => new D(b.get(), c.get()) }
+
+      Provider.get[D]
+    @p
+      However, as we can see it brings a lot of boilerplate to the table.
+      But what if we generated all of that code? E.g. with macro annotations:
+    @hl.scala
+      @@Wired class A
+      @@Wired class B (a: A)
+      @@Wired class C (b: B)
+      @@Wired class D (b: B, c: C)
+
+      Provider.get[D]
+    @p
+      That's basically what Pulp does.
+
+  @sect{Features}
+    @ul
+      @li
+        both monomorphic and polymorphic classes
+      @li
+        existing companion objects will be extended and missing generated
+      @li
+        class might have or have not dependencies passed via constructor
+      @li
+        type-class derivation via @code{import io.scalaland.pulp.semiauto._}
+
+  @sect{Limitations}
+    @p
+      Pulp uses implicits for passing objects around. It means that
+      @code{Provider[T]} must be in scope of initialization for each dependency
+      required by our class. We might pass it manually, write implicit by hand
+      or take from companion object - remember however that only classes
+      annotated with @code{@@Wired} will have implicit @code{Provider}s generated.
+    @p
+      Additionally whether something will have one or more instances is not
+      guaranteed for @code{@@Wired} - if one need to ensure that there will be only
+      one Provider or that each Provider of some type will always return new
+      instance one should use @code{@@Singleton} or @code{@@Factory}. If there might be
+      arguments available in first usage scopes, Provider needs arguments from
+      scope, but @code{@@Singleton} doesn't work you might use @code{@@Cached}.
+    @p
+      Last but not least such implementation of @code{Provider}s is invariant - if
+      we have @code{trait A} and @code{@@Wired class AImpl extends A} it will not be
+      resolved for @code{A} unless we explicitly provide
+    @hl.scala
+      implicit val a = Provider.upcast[AImpl, A]
+    @p
+      or (if implementation is accessible to interface's scope):
+    @hl.scala
+      @@ImplementedAs[AImpl] class A
+
+      @@Wired class AImpl extends A
