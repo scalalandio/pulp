@@ -2,6 +2,7 @@
 
 [![https://travis-ci.org/scalalandio/pulp](https://api.travis-ci.org/scalalandio/pulp.svg?branch=master)](https://travis-ci.org/scalalandio/pulp)
 [![Maven Central](https://img.shields.io/maven-central/v/io.scalaland/pulp_2.12.svg)](http://search.maven.org/#search%7Cga%7C1%7Cpulp)
+[![Scala.js](https://www.scala-js.org/assets/badges/scalajs-0.6.17.svg)](https://www.scala-js.org)
 [![License](http://img.shields.io/:license-Apache%202-green.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 Too much fructose is not good for your health, so you should remove
